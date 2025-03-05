@@ -1,0 +1,9 @@
+Metadata-Version: 2.2
+Name: media-manager
+Version: 0.1.0
+Summary: Add your description here
+Author-email: OscarMCV <oscarm.cabrerav@gmail.com>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: boto3>=1.37.6
+Requires-Dist: fastapi>=0.115.11
