@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "media-dealer"
+version = "0.0.1"
+authors = [
+  { name="OscarMCV", email="oscarm.cabrerav@gmail.com" },
+]
+description = "Media dealer is a python library to manage media files"
+readme = "README.md"
+requires-python = ">=3.10"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: linux",
+]
+
+dependencies = [
+    "boto3>=1.37.6"
+]
