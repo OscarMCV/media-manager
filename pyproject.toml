@@ -3,15 +3,16 @@ name = "media-manager"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "OscarMCV", email = "oscarm.cabrerav@gmail.com" }
-]
+authors = [{ name = "OscarMCV", email = "oscarm.cabrerav@gmail.com" }]
 requires-python = ">=3.10"
 dependencies = [
     "boto3>=1.37.6",
-    "fastapi>=0.115.11",
 ]
 
 [build-system]
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
+
+
+[tool.uv]
+dev-dependencies = ["pytest<8.0.0,>=7.4.3", "coverage<8.0.0,>=7.4.3"]
