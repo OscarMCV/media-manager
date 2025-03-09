@@ -10,8 +10,8 @@ __all__ = ["AWS_MediaManager", "Local_MediaManager", "MediaManager", "MUploadFil
 
 
 @lru_cache
-def get_system_media_manager() -> MediaManager:
+def get_system_media_manager(*args, **kwargs) -> MediaManager:
     if os.getenv("MEDIA_MANAGER", "local") == "AWS":
-        return AWS_MediaManager()
+        return AWS_MediaManager(*args, **kwargs)
     else:
-        return Local_MediaManager()
+        return Local_MediaManager(*args, **kwargs)
