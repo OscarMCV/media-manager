@@ -59,7 +59,7 @@ class MediaManager:
     # ===== Abstract Methods sync methods =====
     def sync_upload_file(self, file: MUploadFile, *args, **kwargs) -> str:
         complete_path = self.get_complete_path(file, *args, **kwargs)
-        self._backend_upload(file, complete_path)
+        self._backend_upload(file, complete_path, *args, **kwargs)
         return complete_path
 
     def sync_delete_file(self, complete_path: str, *args, **kwargs) -> str:
@@ -88,7 +88,7 @@ class MediaManager:
     # ===== Abstract Methods async methods =====
     async def upload_file(self, file: MUploadFile, *args, **kwargs) -> str:
         complete_path = self.get_complete_path(file, *args, **kwargs)
-        self._backend_upload(file, complete_path)
+        self._backend_upload(file, complete_path, *args, **kwargs)
         return complete_path
 
     async def delete_file(self, complete_path: str, *args, **kwargs) -> str:
