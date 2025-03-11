@@ -78,8 +78,9 @@ class AWS_MediaManager(MediaManager):
         return self._s3_client
 
     # Backend specific Methods
-    def _backend_upload(self, file: MUploadFile, complete_path):
-        self.bucket.upload_fileobj(file.file, Key=complete_path)
+    def _backend_upload(self, file: MUploadFile, complete_path, *args, **kwargs):
+        ExtraArgs = kwargs.get("ExtraArgs", {})
+        self.bucket.upload_fileobj(file.file, Key=complete_path, ExtraArgs=ExtraArgs)
 
     def _backend_delete(self, complete_path: str) -> str:
         response = self.bucket.delete_objects(
