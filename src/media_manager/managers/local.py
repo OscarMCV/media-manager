@@ -6,7 +6,13 @@ import os
 
 class Local_MediaManager(MediaManager):
     # Backend specific Methods
-    def _backend_upload(self, file: MUploadFile, complete_path: str) -> str:
+    def _backend_upload(
+        self,
+        file: MUploadFile,
+        complete_path: str,
+        *args,
+        **kwargs,
+    ):
         with open(complete_path, "wb") as f:
             f.write(file.file.read())
 
