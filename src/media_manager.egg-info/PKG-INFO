@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: media-manager
+Version: 0.1.0
+Summary: Add your description here
+Author-email: OscarMCV <oscarm.cabrerav@gmail.com>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: boto3>=1.37.6
+Requires-Dist: broadcaster[redis]>=0.3.1
+Requires-Dist: pydantic>=2.11.5
+Requires-Dist: typing-extensions>=4.12.2

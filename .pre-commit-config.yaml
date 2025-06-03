@@ -17,6 +17,7 @@ repos:
       - id: ruff
         args:
           - --fix
+          - --line-length=79
       - id: ruff-format
 
 ci:
