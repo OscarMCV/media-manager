@@ -82,3 +82,23 @@ class ProcessBroadcaster:
     def sync_broadcast(self, message: BroadcasterPublish) -> BroadcasterPublish:
         """Synchronous version of broadcast."""
         return self.loop.run_until_complete(self.broadcast(message=message))
+
+    def calculate_progress(
+        self,
+        current_element: int = 1,
+        total_elements: int = 1,
+        base_percentage: int = 0,
+        top_percentage: int = 100,
+    ) -> int:
+        """
+        Calculate the progress percentage based on the current element and
+        total elements.
+        """
+        if top_percentage > 100:
+            # The current process cant be more than 100%
+            top_percentage = 100
+        current_percentage = (
+            (current_element / max(total_elements, 1))
+            * (top_percentage - base_percentage)
+        ) + base_percentage
+        return int(min(current_percentage, 100))

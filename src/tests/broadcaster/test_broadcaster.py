@@ -146,3 +146,81 @@ def test_sync_broadcast_calls_validate_and_broadcast():
     result = pb.sync_broadcast(msg)
     pb._loop.run_until_complete.assert_called_once()
     assert result == "result"
+
+
+def test_calculate_progress_default():
+    pb = ProcessBroadcaster()
+    assert pb.calculate_progress() == 100
+
+
+def test_calculate_progress_start():
+    pb = ProcessBroadcaster()
+    assert pb.calculate_progress(current_element=0, total_elements=10) == 0
+
+
+def test_calculate_progress_halfway():
+    pb = ProcessBroadcaster()
+    assert pb.calculate_progress(current_element=5, total_elements=10) == 50
+
+
+def test_calculate_progress_with_base_and_top():
+    pb = ProcessBroadcaster()
+    # 5/10 = 0.5, range 20-80: 0.5*60+20 = 50
+    assert (
+        pb.calculate_progress(
+            current_element=5,
+            total_elements=10,
+            base_percentage=20,
+            top_percentage=80,
+        )
+        == 50
+    )
+
+
+def test_calculate_progress_top_percentage_capped():
+    pb = ProcessBroadcaster()
+    # top_percentage > 100 should be capped at 100
+    assert (
+        pb.calculate_progress(
+            current_element=5,
+            total_elements=10,
+            base_percentage=0,
+            top_percentage=150,
+        )
+        == 50
+    )
+
+
+def test_calculate_progress_current_greater_than_total():
+    pb = ProcessBroadcaster()
+    # Should not exceed 100
+    assert pb.calculate_progress(current_element=15, total_elements=10) == 100
+
+
+def test_calculate_progress_total_elements_zero():
+    pb = ProcessBroadcaster()
+    # Should not divide by zero, should return base_percentage
+    assert (
+        pb.calculate_progress(
+            current_element=0,
+            total_elements=0,
+            base_percentage=10,
+            top_percentage=90,
+        )
+        == 10
+    )
+    assert (
+        pb.calculate_progress(
+            current_element=5,
+            total_elements=0,
+            base_percentage=10,
+            top_percentage=90,
+        )
+        == 100
+    )
+
+
+def test_calculate_progress_negative_current_element():
+    pb = ProcessBroadcaster()
+    # Negative current_element should be handled mathematically
+    assert pb.calculate_progress(current_element=-2, total_elements=10) == -20
