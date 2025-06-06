@@ -7,7 +7,7 @@ class BroadCaster(Broadcast):
     def __init__(
         self, redis_host: str, redis_port: int, redis_database: int = 3
     ) -> None:
-        super().__init__(f"redis:/{redis_host}:{redis_port}/{redis_database}")
+        super().__init__(f"redis://{redis_host}:{redis_port}/{redis_database}")
         self.connected = False
         return
 
@@ -33,5 +33,7 @@ class BroadCaster(Broadcast):
         if issubclass(type(message), BroadcasterPublish):
             valid_message = message.model_dump_json()
         else:
-            raise TypeError("message must be an instance of BroadcasterPublish")
+            raise TypeError(
+                "message must be an instance of BroadcasterPublish"
+            )
         return await super().publish(channel, valid_message)
