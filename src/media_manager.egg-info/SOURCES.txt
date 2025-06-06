@@ -17,6 +17,9 @@ src/sockets/broadcaster/broadcaster.py
 src/sockets/broadcaster/schemas.py
 src/sockets/process_broadcaster/__init__.py
 src/sockets/process_broadcaster/process_broadcaster.py
+src/sockets/process_broadcaster/utils.py
 src/tests/__init__.py
 src/tests/conftest.py
 src/tests/test_media.py
+src/tests/broadcaster/__init__.py
+src/tests/broadcaster/test_broadcaster.py
