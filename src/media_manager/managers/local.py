@@ -13,6 +13,8 @@ class Local_MediaManager(MediaManager):
         *args,
         **kwargs,
     ):
+        if not os.path.exists(os.path.dirname(complete_path)):
+            os.makedirs(os.path.dirname(complete_path))
         with open(complete_path, "wb") as f:
             f.write(file.file.read())
 
