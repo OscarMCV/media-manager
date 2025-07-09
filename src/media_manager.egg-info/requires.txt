@@ -1,0 +1,4 @@
+boto3>=1.37.6
+broadcaster[redis]>=0.3.1
+pydantic>=2.11.5
+typing-extensions>=4.12.2
