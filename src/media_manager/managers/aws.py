@@ -19,6 +19,8 @@ class AWS_MediaManager(MediaManager):
         aws_access_key_id: str | None = None,
         aws_secret_access_key: str | None = None,
         aws_region_name: str | None = None,
+        *_args,
+        **_kwargs,
     ):
         if bucket is None:
             bucket = os.getenv("AWS_S3_BUCKET_NAME", None)

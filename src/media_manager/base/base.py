@@ -15,6 +15,8 @@ class MediaManager:
         upload_path: Callable | None = None,
         root_folder: str = "",
         add_environment_as_prefix: bool = True,
+        *_args,
+        **_kwargs,
     ):
         self.upload_path = upload_path
         self.root_folder = root_folder
