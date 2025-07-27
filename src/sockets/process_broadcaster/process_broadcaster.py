@@ -94,6 +94,7 @@ class ProcessBroadcaster:
             return self.loop.run_until_complete(
                 self.broadcast(message=message, cache=cache)
             )
+        return message
 
     def calculate_progress(
         self,
