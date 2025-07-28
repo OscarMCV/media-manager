@@ -1,4 +1,5 @@
 from asyncio import AbstractEventLoop
+from collections.abc import Callable
 
 from sockets.broadcaster.broadcaster import BroadCaster
 from sockets.broadcaster.schemas import BroadcasterPublish
@@ -73,7 +74,7 @@ class ProcessBroadcaster:
         return
 
     async def broadcast(
-        self, message: BroadcasterPublish
+        self, message: BroadcasterPublish, cache: Callable | None = None
     ) -> BroadcasterPublish:
         if self.broadcast_messages:
             if not self.broadcaster.connected:
@@ -81,16 +82,19 @@ class ProcessBroadcaster:
             await self.broadcaster.publish(
                 channel=self.broadcast_channel, message=message
             )
+            if cache:
+                cache(self, message)
         return message
 
     def sync_broadcast(
-        self, message: BroadcasterPublish
+        self, message: BroadcasterPublish, cache: Callable | None = None
     ) -> BroadcasterPublish:
         """Synchronous version of broadcast."""
         if self.broadcast_messages:
             return self.loop.run_until_complete(
-                self.broadcast(message=message)
+                self.broadcast(message=message, cache=cache)
             )
+        return message
 
     def calculate_progress(
         self,
