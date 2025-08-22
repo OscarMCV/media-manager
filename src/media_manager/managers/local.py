@@ -2,6 +2,7 @@ from media_manager.base.base import MediaManager
 from media_manager.base.datastructures import MUploadFile
 from io import BytesIO
 import os
+from typing import List
 
 
 class Local_MediaManager(MediaManager):
@@ -28,14 +29,14 @@ class Local_MediaManager(MediaManager):
     def _backend_get_file_location(self, complete_path: str) -> str:
         return complete_path
 
-    def _backend_delete_files_in_folder(self, prefix: str) -> list[str]:
+    def _backend_delete_files_in_folder(self, prefix: str) -> List[str]:
         files = self._backend_list_files_in_folder(prefix)
         files_to_delete = [{"Key": file} for file in files]
         for file in files:
             os.remove(os.path.join(prefix, file))
         return files_to_delete
 
-    def _backend_list_files_in_folder(self, prefix: str) -> list[str]:
+    def _backend_list_files_in_folder(self, prefix: str) -> List[str]:
         files = os.listdir(prefix)
         return files
 
