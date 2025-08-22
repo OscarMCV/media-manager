@@ -3,6 +3,7 @@ from typing_extensions import TypedDict
 from io import BytesIO
 from collections.abc import Callable
 import os
+from typing import List
 
 
 class DeletedFile(TypedDict):
@@ -49,10 +50,10 @@ class MediaManager:
 
     def _backend_delete_files_in_folder(
         self, prefix: str, *args, **kwargs
-    ) -> list[str]:
+    ) -> List[str]:
         raise NotImplementedError
 
-    def _backend_list_files_in_folder(self, prefix: str, *args, **kwargs) -> list[str]:
+    def _backend_list_files_in_folder(self, prefix: str, *args, **kwargs) -> List[str]:
         raise NotImplementedError
 
     def _backend_download_file(self, file: str) -> BytesIO:
@@ -74,11 +75,11 @@ class MediaManager:
 
     def sync_delete_files_in_folder(
         self, prefix: str, *args, **kwargs
-    ) -> list[DeletedFile]:
+    ) -> List[DeletedFile]:
         deleted_files = self._backend_delete_files_in_folder(prefix, *args, **kwargs)
         return [{"key": file} for file in deleted_files]
 
-    def sync_list_files_in_folder(self, prefix: str, *args, **kwargs) -> list[str]:
+    def sync_list_files_in_folder(self, prefix: str, *args, **kwargs) -> List[str]:
         return self._backend_list_files_in_folder(prefix, *args, **kwargs)
 
     def sync_download_file(self, file: str, *args, **kwargs) -> BytesIO:
@@ -103,11 +104,11 @@ class MediaManager:
 
     async def delete_files_in_folder(
         self, prefix: str, *args, **kwargs
-    ) -> list[DeletedFile]:
+    ) -> List[DeletedFile]:
         deleted_files = self._backend_delete_files_in_folder(prefix, *args, **kwargs)
         return [{"key": file} for file in deleted_files]
 
-    async def list_files_in_folder(self, prefix: str, *args, **kwargs) -> list[str]:
+    async def list_files_in_folder(self, prefix: str, *args, **kwargs) -> List[str]:
         return self._backend_list_files_in_folder(prefix, *args, **kwargs)
 
     async def download_file(self, file: str, *args, **kwargs) -> BytesIO:

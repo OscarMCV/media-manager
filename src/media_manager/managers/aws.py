@@ -7,6 +7,7 @@ from botocore.exceptions import ClientError
 from io import BytesIO
 from media_manager.base.datastructures import MUploadFile
 from collections.abc import Callable
+from typing import List
 
 
 class AWS_MediaManager(MediaManager):
@@ -99,7 +100,7 @@ class AWS_MediaManager(MediaManager):
     def _backend_get_file_location(self, complete_path: str) -> str:
         return f"https://{self.bucket_name}.s3.{self.aws_region_name}.amazonaws.com/{complete_path}"
 
-    def _backend_delete_files_in_folder(self, prefix: str) -> list[str]:
+    def _backend_delete_files_in_folder(self, prefix: str) -> List[str]:
         files_in_folder = self._backend_list_files_in_folder(prefix)
         files_to_delete = [{"Key": file} for file in files_in_folder]
         s3_client = self.s3_client
@@ -109,7 +110,7 @@ class AWS_MediaManager(MediaManager):
             )
         return files_to_delete
 
-    def _backend_list_files_in_folder(self, prefix: str) -> list[str]:
+    def _backend_list_files_in_folder(self, prefix: str) -> List[str]:
         s3_client = self.s3_client
         response = s3_client.list_objects_v2(Bucket=self.bucket_name, Prefix=prefix)
         files_in_folder = response.get("Contents", [])
