@@ -224,3 +224,130 @@ def test_calculate_progress_negative_current_element():
     pb = ProcessBroadcaster()
     # Negative current_element should be handled mathematically
     assert pb.calculate_progress(current_element=-2, total_elements=10) == -20
+
+
+@pytest.mark.asyncio
+async def test_broadcast_calls_cache_with_timeout():
+    """Test that cache function is called with cache_timeout parameter."""
+    pb = ProcessBroadcaster()
+    pb.broadcast_messages = True
+    pb.broadcast_channel = "chan"
+    mock_broadcaster = MagicMock()
+    mock_broadcaster.connected = True
+    mock_broadcaster.publish = AsyncMock()
+    pb._broadcaster = mock_broadcaster
+
+    msg = MagicMock()
+    cache_mock = MagicMock()
+    cache_timeout = 300
+
+    await pb.broadcast(msg, cache=cache_mock, cache_timeout=cache_timeout)
+
+    cache_mock.assert_called_once_with(pb, msg, cache_timeout)
+
+
+@pytest.mark.asyncio
+async def test_broadcast_calls_cache_with_none_timeout():
+    """Test that cache function is called with None timeout when not provided."""
+    pb = ProcessBroadcaster()
+    pb.broadcast_messages = True
+    pb.broadcast_channel = "chan"
+    mock_broadcaster = MagicMock()
+    mock_broadcaster.connected = True
+    mock_broadcaster.publish = AsyncMock()
+    pb._broadcaster = mock_broadcaster
+
+    msg = MagicMock()
+    cache_mock = MagicMock()
+
+    await pb.broadcast(msg, cache=cache_mock)
+
+    cache_mock.assert_called_once_with(pb, msg, None)
+
+
+@pytest.mark.asyncio
+async def test_broadcast_does_not_call_cache_when_not_provided():
+    """Test that cache function is not called when cache is None."""
+    pb = ProcessBroadcaster()
+    pb.broadcast_messages = True
+    pb.broadcast_channel = "chan"
+    mock_broadcaster = MagicMock()
+    mock_broadcaster.connected = True
+    mock_broadcaster.publish = AsyncMock()
+    pb._broadcaster = mock_broadcaster
+
+    msg = MagicMock()
+
+    # Should not raise any errors
+    result = await pb.broadcast(msg, cache=None, cache_timeout=300)
+
+    assert result == msg
+
+
+@pytest.mark.asyncio
+async def test_broadcast_does_not_call_cache_when_broadcast_messages_false():
+    """Test that cache is not called when broadcast_messages is False."""
+    pb = ProcessBroadcaster()
+    pb.broadcast_messages = False
+    pb.broadcast_channel = "chan"
+    mock_broadcaster = MagicMock()
+    mock_broadcaster.connected = True
+    mock_broadcaster.publish = AsyncMock()
+    pb._broadcaster = mock_broadcaster
+
+    msg = MagicMock()
+    cache_mock = MagicMock()
+
+    await pb.broadcast(msg, cache=cache_mock, cache_timeout=300)
+
+    cache_mock.assert_not_called()
+
+
+def test_sync_broadcast_passes_cache_timeout():
+    """Test that sync_broadcast passes cache_timeout to broadcast."""
+    pb = ProcessBroadcaster()
+    pb.broadcast_messages = True
+    pb._loop = MagicMock()
+    pb.broadcast = AsyncMock()
+    pb._loop.run_until_complete = MagicMock(return_value="result")
+
+    msg = MagicMock()
+    cache_mock = MagicMock()
+    cache_timeout = 600
+
+    result = pb.sync_broadcast(msg, cache=cache_mock, cache_timeout=cache_timeout)
+
+    pb._loop.run_until_complete.assert_called_once()
+    # Verify that broadcast was called with the correct arguments
+    assert result == "result"
+
+
+def test_sync_broadcast_with_none_cache_timeout():
+    """Test that sync_broadcast works with None cache_timeout."""
+    pb = ProcessBroadcaster()
+    pb.broadcast_messages = True
+    pb._loop = MagicMock()
+    pb.broadcast = AsyncMock()
+    pb._loop.run_until_complete = MagicMock(return_value="result")
+
+    msg = MagicMock()
+    cache_mock = MagicMock()
+
+    result = pb.sync_broadcast(msg, cache=cache_mock, cache_timeout=None)
+
+    pb._loop.run_until_complete.assert_called_once()
+    assert result == "result"
+
+
+def test_sync_broadcast_returns_message_when_broadcast_disabled():
+    """Test that sync_broadcast returns message when broadcast_messages is False."""
+    pb = ProcessBroadcaster()
+    pb.broadcast_messages = False
+
+    msg = MagicMock()
+    cache_mock = MagicMock()
+
+    result = pb.sync_broadcast(msg, cache=cache_mock, cache_timeout=300)
+
+    assert result == msg
+    cache_mock.assert_not_called()

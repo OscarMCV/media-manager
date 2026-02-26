@@ -43,9 +43,7 @@ class ProcessBroadcaster:
     @property
     def loop(self) -> AbstractEventLoop:
         if self._loop is None:
-            raise Exception(
-                "Must set event loop before broadcast to websocket"
-            )
+            raise Exception("Must set event loop before broadcast to websocket")
         return self._loop
 
     @loop.setter
@@ -74,7 +72,10 @@ class ProcessBroadcaster:
         return
 
     async def broadcast(
-        self, message: BroadcasterPublish, cache: Callable | None = None
+        self,
+        message: BroadcasterPublish,
+        cache: Callable | None = None,
+        cache_timeout: int | None = None,
     ) -> BroadcasterPublish:
         if self.broadcast_messages:
             if not self.broadcaster.connected:
@@ -83,16 +84,21 @@ class ProcessBroadcaster:
                 channel=self.broadcast_channel, message=message
             )
             if cache:
-                cache(self, message)
+                cache(self, message, cache_timeout)
         return message
 
     def sync_broadcast(
-        self, message: BroadcasterPublish, cache: Callable | None = None
+        self,
+        message: BroadcasterPublish,
+        cache: Callable | None = None,
+        cache_timeout: int | None = None,
     ) -> BroadcasterPublish:
         """Synchronous version of broadcast."""
         if self.broadcast_messages:
             return self.loop.run_until_complete(
-                self.broadcast(message=message, cache=cache)
+                self.broadcast(
+                    message=message, cache=cache, cache_timeout=cache_timeout
+                )
             )
         return message
 
